@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="module">
+    <table width="100%">
+    <caption>{% trans "Choose a user to log in as:" %}</caption>
+    {% for user in users %}
+        <tr>
+            <th scope="row"><a href="{% url login-as-login user.pk %}">{{ user.username }}</a></th>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+</div>
+{% endblock %}
