@@ -9,12 +9,10 @@ def chooser(request):
     return render_to_response('login_as/chooser.html',
         {'users': User.objects.all().order_by('username')})
 
-def login(request, userid):
+def login(request, username):
     if not request.user.is_superuser:
         raise Http404
-    original = request.user.pk
-    user = get_object_or_404(User, pk=userid)
-    authed = authenticate(remote_user=user)
+    authed = authenticate(from_user=request.user, to_username=username)
     if not authed:
         raise Http404
     auth_login(request, authed)

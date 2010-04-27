@@ -16,7 +16,7 @@
     <caption>{% trans "Choose a user to log in as:" %}</caption>
     {% for user in users %}
         <tr>
-            <th scope="row"><a href="{% url login-as-login user.pk %}">{{ user.username }}</a></th>
+            <th scope="row"><a href="{% url login-as-login user.username %}">{{ user.username }}</a></th>
         </tr>
     {% endfor %}
     </table>
