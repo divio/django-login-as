@@ -10,6 +10,9 @@ setup(
     author_email = 'jonas.obrist@divio.ch',
     url = 'http://github.com/ojii/django-login-as',
     packages = find_packages(),
+    install_requires=[
+        'Django>=1.4',
+    ],
     package_data={
         'login_as': [
             'templates/login_as/*.html',

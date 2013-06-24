@@ -1,7 +1,8 @@
 {% extends "admin/base_site.html" %}
-{% load i18n %}
+{% load i18n staticfiles %}
+{% load url from future %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}"/>{% endblock %}
 
 {% block coltype %}colMS{% endblock %}
 
@@ -16,7 +17,7 @@
     <caption>{% trans "Choose a user to log in as:" %}</caption>
     {% for user in users %}
         <tr>
-            <th scope="row"><a href="{% url login-as-login user.username %}">{{ user.username }}</a></th>
+            <th scope="row"><a href="{% url 'login-as-login' user.username %}">{{ user.username }}</a></th>
         </tr>
     {% endfor %}
     </table>
