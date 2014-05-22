@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 
+
 class LoginAsBackend(object):
+
     def authenticate(self, from_user, to_username):
         if not from_user.is_superuser:
             return None

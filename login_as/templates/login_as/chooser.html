@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n staticfiles %}
+{% load i18n static %}
 {% load url from future %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}"/>{% endblock %}
@@ -15,9 +15,13 @@
     <div class="module">
     <table width="100%">
     <caption>{% trans "Choose a user to log in as:" %}</caption>
-    {% for user in users %}
+    {% for user in object_list %}
         <tr>
-            <th scope="row"><a href="{% url 'login-as-login' user.username %}">{{ user.username }}</a></th>
+            {% with full_name=user.get_full_name %}
+            <th scope="row">
+                <a href="{% url 'login-as-login' user.username %}">{% if full_name %}{{ full_name }} - {% endif %}{{ user.username }}</a>
+            </th>
+            {% endwith %}
         </tr>
     {% endfor %}
     </table>

@@ -1,19 +1,39 @@
-from django.shortcuts import render_to_response, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 from django.http import HttpResponseRedirect, Http404
+from django.views.generic import ListView
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 
-def chooser(request):
-    if not request.user.is_superuser:
-        raise Http404
-    return render_to_response('login_as/chooser.html',
-        {'users': User.objects.all().order_by('username')})
+try:
+    from django.contrib.auth import get_user_model
+except ImportError:
+    from django.contrib.auth.models import User
+    get_user_model = lambda: User
 
+
+is_superuser = lambda user: user.is_superuser
+
+
+@user_passes_test(is_superuser)
 def login(request, username):
-    if not request.user.is_superuser:
+    authenticated = authenticate(from_user=request.user, to_username=username)
+    if not authenticated:
         raise Http404
-    authed = authenticate(from_user=request.user, to_username=username)
-    if not authed:
-        raise Http404
-    auth_login(request, authed)
+    auth_login(request, authenticated)
+    message = _("You are now logged in as %(username)s") % {'username': username}
+    messages.success(request, message)
     return HttpResponseRedirect('/')
+
+
+class UserChooseView(ListView):
+    model = get_user_model()
+    template_name = 'login_as/chooser.html'
+
+    @method_decorator(user_passes_test(is_superuser))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserChooseView, self).dispatch(request, *args, **kwargs)
+
+
+user_choose = UserChooseView.as_view()
